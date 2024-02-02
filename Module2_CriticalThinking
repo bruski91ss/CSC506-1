@@ -1,0 +1,22 @@
+# Loop Structure
+
+def salary_loop():
+    starting_salary = 0.01
+    daily_salary = starting_salary
+
+    for day in range(1, 31):
+        print(f"Day {day} - Salary: ${daily_salary: .2f}")
+        daily_salary *= 2
+
+
+salary_loop()
+
+# Recursive Structure
+
+def salary_recursive(day, salary=0.01):
+    if day == 31:
+        return salary
+    print(f"Day {day} - Salary: ${salary: .2f}")
+    salary_recursive(day + 1, salary * 2)
+
+salary_recursive(1, 0.01)
