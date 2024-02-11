@@ -1,0 +1,90 @@
+# Module 4 Critical Thinking
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def push_stack(self, data):
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
+
+    def pop_stack(self):
+        if not self.head:
+            raise IndexError("List is Empty")
+        data = self.head.data
+        self.head = self.head.next
+        return data
+
+    def push_queue(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            return
+        current = self.head
+        while current.next:
+            current = current.next
+        current.next = new_node
+
+    def pop_queue(self):
+        if not self.head:
+            raise IndexError("Queue is Empty")
+        if not self.head.next:
+            data = self.head.data
+            self.head = None
+            return data
+        current = self.head
+        while current.next.next:
+            current = current.next
+        data = current.next.data
+        current.next = None
+        return data
+
+    def __len__(self):
+        size = 0
+        current = self.head
+        while current:
+            size += 1
+            current = current.next
+        return size
+
+
+import time
+from collections import deque
+
+
+def linked_list_stack():
+    stack = LinkedList()
+    for i in range(10000):
+        stack.push_stack(i)
+
+    start_time = time.time()
+    for i in range(10000):
+        stack.pop_stack()
+    end_time = time.time()
+
+    return end_time - start_time
+
+
+def linked_list_queue():
+    queue = LinkedList()
+    for i in range(10000):
+        queue.push_queue(i)
+
+    start_time = time.time()
+    for i in range(10000):
+        queue.pop_queue()
+    end_time = time.time()
+
+    return end_time - start_time
+
+
+if __name__ == "__main__":
+    print("Linked List Stack Runtime:", linked_list_stack())
+    print("Linked List Queue Runtime:", linked_list_queue())
