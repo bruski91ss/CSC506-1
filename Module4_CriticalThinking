@@ -1,5 +1,9 @@
 # Module 4 Critical Thinking
 
+import time
+from collections import deque
+
+
 class Node:
     def __init__(self, data):
         self.data = data
@@ -55,8 +59,16 @@ class LinkedList:
         return size
 
 
-import time
-from collections import deque
+def list_stack():
+    stack = deque()
+    for i in range(10000):
+        stack.append(i)
+    start_time = time.time()
+    for i in range(10000):
+        stack.pop()
+    end_time = time.time()
+
+    return end_time - start_time
 
 
 def linked_list_stack():
@@ -67,6 +79,18 @@ def linked_list_stack():
     start_time = time.time()
     for i in range(10000):
         stack.pop_stack()
+    end_time = time.time()
+
+    return end_time - start_time
+
+
+def list_queue():
+    queue = deque()
+    for i in range(10000):
+        queue.append(i)
+    start_time = time.time()
+    for i in range(10000):
+        queue.popleft()
     end_time = time.time()
 
     return end_time - start_time
@@ -86,5 +110,7 @@ def linked_list_queue():
 
 
 if __name__ == "__main__":
+    print("List Stack Runtime:", list_stack())
     print("Linked List Stack Runtime:", linked_list_stack())
+    print("List Queue Runtime:", list_queue())
     print("Linked List Queue Runtime:", linked_list_queue())
