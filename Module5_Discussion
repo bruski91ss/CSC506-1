@@ -83,7 +83,7 @@ for i in iterations:
 
 plt.plot(iterations, hash_table_times, label="Hash Table")
 plt.plot(iterations, dict_times, label="Dictionary")
-plt.xlabel("Iterations")
+plt.xlabel("Repetition")
 plt.ylabel("Avg Time (Sec)")
 plt.title("Time Comparison: Hash Table & Dictionary")
 plt.legend()
