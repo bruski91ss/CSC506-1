@@ -1,0 +1,85 @@
+# Portfolio Milestone
+
+import random
+import time
+
+
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    mid = len(arr) // 2
+    left = arr[:mid]
+    right = arr[mid:]
+
+    left = merge_sort(left)
+    right = merge_sort(right)
+
+    return merge(left, right)
+
+
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    pivot = random.choice(arr)
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+
+    return quick_sort(left) + middle + quick_sort(right)
+
+
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and key < arr[j]:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+    return arr
+
+
+def merge(left, right):
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result += left[i:]
+    result += right[j:]
+    return result
+
+
+def generate_random_list(n):
+    return [random.randint(0, n) for _ in range(n)]
+
+
+def measure_sort_time(sort_func, arr):
+    start_time = time.time()
+    sort_func(arr)
+    end_time = time.time()
+    return end_time - start_time
+
+
+def run_test(n_values, num_tests):
+    for n in n_values:
+        print(f"\nSize {n}:")
+        for sort_func in [merge_sort, quick_sort, insertion_sort]:
+            total_time = 0
+            for _ in range(num_tests):
+                arr = generate_random_list(n)
+                time_taken = measure_sort_time(sort_func, arr)
+                total_time += time_taken
+            avg_time = total_time / num_tests
+            print(f"{sort_func.__name__}: {avg_time:.6f}s")
+
+
+n_values = [100, 1000, 10000]
+num_test = 10
+run_test(n_values, num_test)
