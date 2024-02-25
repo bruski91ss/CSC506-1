@@ -1,0 +1,134 @@
+# Module 6 Critical Thinking
+
+class tree_node:
+    def __init__(self, key):
+        self.key = key
+        self.left = None
+        self.right = None
+
+
+class binary_search_tree:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, key):
+        self.root = self._insert(self.root, key)
+
+    def _insert(self, root, key):
+        if root is None:
+            return tree_node(key)
+        if key < root.key:
+            root.left = self._insert(root.left, key)
+        elif key > root.key:
+            root.right = self._insert(root.right, key)
+        return root
+
+    def is_balanced(self):
+        return self._is_balanced(self.root) != -1
+
+    def _is_balanced(self, root):
+        if root is None:
+            return 0
+
+        left_height = self._is_balanced(root.left)
+        right_height = self._is_balanced(root.right)
+
+        if left_height == -1 or right_height == -1 or abs(left_height - right_height) > 1:
+            return -1
+
+        return max(left_height, right_height) + 1
+
+    def rebalance(self):
+        nodes = self._in_order_traversal(self.root)
+        return self._build_balanced_tree(nodes)
+
+    def _in_order_traversal(self, root):
+        if root is None:
+            return []
+        return self._in_order_traversal(root.left) + [root.key] + self._in_order_traversal(root.right)
+
+    def _build_balanced_tree(self, nodes):
+        if not nodes:
+            return None
+
+        mid = len(nodes) // 2
+        root = tree_node(nodes[mid])
+        root.left = self._build_balanced_tree(nodes[:mid])
+        root.right = self._build_balanced_tree(nodes[mid + 1:])
+        return root
+
+    def print_levels(self):
+        levels = []
+        self._level_order_traversal(self.root, 0, levels)
+        print("Level Order:", levels)
+
+    def _level_order_traversal(self, root, level, levels):
+        if root is not None:
+            if len(levels) <= level:
+                levels.append([])
+            levels[level].append(root.key)
+            self._level_order_traversal(root.left, level + 1, levels)
+            self._level_order_traversal(root.right, level + 1, levels)
+
+    def print_in_order(self):
+        result = []
+        self._in_order(self.root, result)
+        print("In Order:", result)
+
+    def _in_order(self, root, result):
+        if root is not None:
+            self._in_order(root.left, result)
+            result.append(root.key)
+            self._in_order(root.right, result)
+
+    def print_pre_order(self):
+        result = []
+        self._pre_order(self.root, result)
+        print("Pre Order:", result)
+
+    def _pre_order(self, root, result):
+        if root is not None:
+            result.append(root.key)
+            self._pre_order(root.left, result)
+            self._pre_order(root.right, result)
+
+    def print_post_order(self):
+        result = []
+        self._post_order(self.root, result)
+        print("Post Order:", result)
+
+    def _post_order(self, root, result):
+        if root is not None:
+            self._post_order(root.left, result)
+            self._post_order(root.right, result)
+            result.append(root.key)
+
+
+if __name__ == "__main__":
+    import random
+
+    bst = binary_search_tree()
+    random_numbers = [random.randint(1, 100) for _ in range(15)]
+    for num in random_numbers:
+        bst.insert(num)
+
+    print("Is Balanced:", bst.is_balanced())
+
+    bst.print_levels()
+    bst.print_in_order()
+    bst.print_pre_order()
+    bst.print_post_order()
+
+    for _ in range(5):
+        bst.insert(100)
+
+    print("Is Balanced:", bst.is_balanced())
+
+    bst.root = bst.rebalance()
+
+    print("Is Balanced:", bst.is_balanced())
+
+    bst.print_levels()
+    bst.print_in_order()
+    bst.print_pre_order()
+    bst.print_post_order()
