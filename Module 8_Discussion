@@ -1,0 +1,71 @@
+# Module 8 Discussion
+
+import random
+import time
+import matplotlib.pyplot as plt
+
+
+def random_list(n):
+    return [random.randint(1, 100) for _ in range(n)]
+
+
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
+
+def modified_bubble_sort(arr):
+    n = len(arr)
+    swapped = True
+    start = 0
+    end = n - 1
+
+    while swapped:
+        swapped = False
+
+        for i in range(start, end):
+            if arr[i] > arr[i + 1]:
+                arr[i], arr[i + 1] = arr[i + 1], arr[i]
+                swapped = True
+
+        end -= 1
+        for i in range(end, start, -1):
+            if arr[i] > arr[i + 1]:
+                arr[i], arr[i + 1] = arr[i + 1], arr[i]
+                swapped = True
+
+        start += 1
+
+    return arr
+
+
+def benchmark(sort_func, arr):
+    start_time = time.time()
+    sort_func(arr)
+    end_time = time.time()
+    return end_time - start_time
+
+
+sizes = [100, 200, 300, 400, 500]
+bubble_sort_times = []
+modified_bubble_sort_times = []
+
+for size in sizes:
+    random_lists = random_list(size)
+    bubble_sort_time = benchmark(bubble_sort, random_lists.copy())
+    modified_bubble_sort_time = benchmark(modified_bubble_sort, random_lists.copy())
+    bubble_sort_times.append(bubble_sort_time)
+    modified_bubble_sort_times.append(modified_bubble_sort_time)
+    print(f"Bubble Sort Time: {bubble_sort_time} seconds")
+    print(f"Modified Bubble Sort Time: {modified_bubble_sort_time} seconds")
+
+plt.plot(sizes, bubble_sort_times, label="Bubble Sort")
+plt.plot(sizes, modified_bubble_sort_times, label="Modified Bubble Sort")
+plt.xlabel("Input Size")
+plt.ylabel("Time (S)")
+plt.title("Comparison of Bubble Sort & Modified Bubble Sort")
+plt.legend()
+plt.show()
