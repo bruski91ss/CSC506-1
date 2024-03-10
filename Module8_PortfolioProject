@@ -1,0 +1,107 @@
+# Portfolio Project
+
+import random
+import time
+import matplotlib.pyplot as plt
+
+
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    mid = len(arr) // 2
+    left = arr[:mid]
+    right = arr[mid:]
+
+    left = merge_sort(left)
+    right = merge_sort(right)
+
+    return merge(left, right)
+
+
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    pivot = random.choice(arr)
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+
+    return quick_sort(left) + middle + quick_sort(right)
+
+
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and key < arr[j]:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+    return arr
+
+
+def merge(left, right):
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result += left[i:]
+    result += right[j:]
+    return result
+
+
+def generate_random_list(n):
+    return [random.randint(0, n) for _ in range(n)]
+
+
+def measure_sort_time(sort_func, arr):
+    start_time = time.time()
+    sort_func(arr)
+    end_time = time.time()
+    return end_time - start_time
+
+
+def run_test(n_values, num_tests):
+    for n in n_values:
+        unsorted_avg_times = []
+        sorted_avg_times = []
+        for sort_func in [merge_sort, quick_sort, insertion_sort]:
+            total_time_unsorted = 0
+            total_time_sorted = 0
+            for _ in range(num_tests):
+                unsorted_arr = generate_random_list(n)
+                sorted_arr = sorted(unsorted_arr)
+
+                time_taken_unsorted = measure_sort_time(sort_func, unsorted_arr)
+                time_taken_sorted = measure_sort_time(sort_func, sorted_arr)
+
+                total_time_unsorted += time_taken_unsorted
+                total_time_sorted += time_taken_sorted
+
+            avg_time_unsorted = total_time_unsorted / num_tests
+            avg_time_sorted = total_time_sorted / num_tests
+            unsorted_avg_times.append(avg_time_unsorted)
+            sorted_avg_times.append(avg_time_sorted)
+            print(f"{sort_func.__name__} Unsorted (Size {n}): {avg_time_unsorted:.6f}s")
+            print(f"{sort_func.__name__} Sorted (Size {n}): {avg_time_sorted:.6f}s")
+
+        plt.plot(["Merge Sort", "Quick Sort", "Insertion Sort"], unsorted_avg_times, label=f"Unsorted (Size {n})")
+        plt.plot(["Merge Sort", "Quick Sort", "Insertion Sort"], sorted_avg_times, label=f"Sorted (Size {n})")
+
+    plt.xlabel("Sorting Algorithm")
+    plt.ylabel("Avg Sorting Time (s)")
+    plt.title(f"Sorting Performance")
+    plt.legend()
+    plt.show()
+
+
+n_values = [100, 500, 1000, 5000, 10000, 50000]
+num_tests = 10
+run_test(n_values, num_tests)
